@@ -1,9 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.UserModel;
+import com.example.demo.model.request.UserRequest;
 import com.example.demo.model.po.Users;
 import com.example.demo.repository.UsersRepository;
-import com.example.demo.security.MyPasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -11,8 +10,6 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.security.auth.kerberos.EncryptionKey;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +24,7 @@ public class UserController {
     PasswordEncoder encoder2 = new BCryptPasswordEncoder();
 
     @PostMapping(value = "/save")
-    public String saveUser(@RequestBody UserModel model) {
+    public String saveUser(@RequestBody UserRequest model) {
         Users checkUser = usersRepository.findByAccount(model.getAccount());
         if(null!=checkUser){
             return "帳戶已存在";
@@ -46,7 +43,7 @@ public class UserController {
 //        MyPasswordEncoder encode = new MyPasswordEncoder();
 //        String pwd = encode.encode(model.getPassword());
 
-        user.setPassword(encrypt);
+        user.setPassword(encoder.encode(model.getPassword()));
         Users data = usersRepository.save(user);
         if (null == data) {
             return "註冊失敗";
@@ -67,7 +64,7 @@ public class UserController {
     }
 
     @PutMapping(value = "/update")
-    public String updateUser(@RequestBody UserModel model){
+    public String updateUser(@RequestBody UserRequest model){
         Users checkUser = usersRepository.findByAccount(model.getAccount());
         Users user = new Users();
         user.setPassword(model.getPassword());
@@ -81,13 +78,13 @@ public class UserController {
     }
 
     @PostMapping(value = "/findOne")
-    public Users findOneUser(@RequestBody UserModel model){
+    public Users findOneUser(@RequestBody UserRequest model){
         return usersRepository.findByAccount(model.getAccount());
     }
 
     @PostMapping(value = "/findAll")
 //    @PreAuthorize("principal.username.equals(#username)")
-    public List<Users> findAllUser(@RequestBody UserModel model){
+    public List<Users> findAllUser(@RequestBody UserRequest model){
         List<Users> list = new ArrayList<>();
         List<Users> users = usersRepository.findAll();
         for (Users user : users){

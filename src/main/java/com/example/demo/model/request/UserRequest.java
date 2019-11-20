@@ -1,10 +1,10 @@
-package com.example.demo.model;
+package com.example.demo.model.request;
 
 import com.example.demo.model.po.Users;
 
 import java.io.Serializable;
 
-public class UserModel {
+public class UserRequest {
     private String account;
     private String password;
 

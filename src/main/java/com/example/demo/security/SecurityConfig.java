@@ -76,7 +76,7 @@ public class SecurityConfig {
         @Override
         protected void configure(HttpSecurity http) throws Exception {
 
-            http.cors();
+            http.cors().disable();
             http.csrf().disable();
 //            http.csrf().ignoringAntMatchers("/login");
 //            http.csrf().ignoringAntMatchers("/logout");
@@ -91,7 +91,7 @@ public class SecurityConfig {
                     .and().logout()
 //                    .logoutSuccessUrl("/logout")
 //                    .deleteCookies("JSESSIONID")
-                        ;
+                    ;
 
             //測試重複登入(改寫了loginFilter而無作用)
             http.sessionManagement().maximumSessions(1)//後登會踢掉前登的
